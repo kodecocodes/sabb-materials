@@ -36,14 +36,32 @@ protocol Product {
 
 protocol ProductionLine {
   associatedtype ProductType
+  init()
   func produce() -> ProductType
 }
 
 protocol Factory {
   associatedtype ProductType
-  var warehouse: [ProductType] { get }
-  func produce()
-  func addProductionLine()
+  associatedtype LineType: ProductionLine
+  var warehouse: [ProductType] { get set }
+  var productionLines: [LineType] { get set }
+  mutating func produce()
+  mutating func addProductionLine()
+}
+
+extension Factory where ProductType == LineType.ProductType {
+  mutating func produce() {
+    var newItems: [ProductType] = []
+    productionLines.forEach { newItems.append($0.produce()) }
+    print("Finished Production")
+    print("-------------------")
+    warehouse.append(contentsOf: newItems)
+  }
+
+  mutating func addProductionLine() {
+    let newProductionLine = LineType.init()
+    productionLines.append(newProductionLine)
+  }
 }
 
 struct Car: Product {
@@ -58,31 +76,18 @@ struct Chocolate: Product{
   }
 }
 
-struct GenericProductionLine<T: Product>: ProductionLine {
-  func produce() -> T {
-    T()
+struct GenericProductionLine<P: Product>: ProductionLine {
+  func produce() -> P {
+    P()
   }
 }
 
-class GenericFactory<T: Product>: Factory {
-  
-  var warehouse: [T] = []
-  var productionLines: [GenericProductionLine<T>] = []
-  
-  func produce() {
-    var newItems: [T] = []
-    productionLines.forEach { newItems.append($0.produce()) }
-    print("Finished Production")
-    print("-------------------")
-    warehouse.append(contentsOf: newItems)
-  }
-  
-  func addProductionLine() {
-    productionLines.append(GenericProductionLine<T>())
-  }
+struct GenericFactory<P: Product>: Factory {
+  var warehouse: [P] = []
+  var productionLines: [GenericProductionLine<P>] = []
 }
 
-let chocolateFactory = GenericFactory<Chocolate>()
+var chocolateFactory = GenericFactory<Chocolate>()
 chocolateFactory.addProductionLine()
 chocolateFactory.produce()
 chocolateFactory.warehouse.count

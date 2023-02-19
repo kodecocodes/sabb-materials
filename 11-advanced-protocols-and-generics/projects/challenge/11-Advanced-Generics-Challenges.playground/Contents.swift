@@ -34,7 +34,6 @@
  Using protocols, define a robot that makes vehicle toys.
  * Each robot is able to assemble a different number of pieces per minute. For example, Robot-A can assemble ten pieces per minute, while Robot-B can assemble five.
  * Each robot type is only able to build a single type of toy.
- * Each toy type has a price value.
  * Each toy type has a different number of pieces. You tell the robot how long it should operate and it will provide the finished toys.
  * Add a method to tell the robot how many toys to build. It will build them and say how much time it needed.
  */
@@ -150,7 +149,6 @@ class Shop {
   }
 
   func startDay(numberOfVisitors: Int) {
-
     fillDisplay()
 
     let potentialSales = Double(numberOfVisitors) * 1.5

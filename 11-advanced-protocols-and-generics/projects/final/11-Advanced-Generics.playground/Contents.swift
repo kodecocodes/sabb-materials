@@ -39,6 +39,15 @@
 //
 //var somePet: Pet = Cat(name: "Whiskers")
 
+//struct Broccoli { }
+//
+//struct Dog: Pet {
+//    typealias Food = Broccoli
+//    var name: String
+//}
+
+//var somePet: any Pet = Dog(name: "Titan")
+
 //protocol Pet {
 //  associatedtype Food
 //  var name: String { get }
@@ -87,6 +96,19 @@ protocol WeightCalculatable {
   associatedtype WeightType: Numeric
   var weight: WeightType { get }
 }
+
+extension WeightCalculatable {
+  static func + (left: Self, right: Self) -> WeightType {
+    left.weight + right.weight
+  }
+}
+
+var heavyTruck1 = Truck()
+var heavyTruck2 = Truck()
+heavyTruck1 + heavyTruck2 // 200
+
+var lightFlower1 = Flower()
+//heavyTruck1 + lightFlower1 // the compiler detects your coding error
 
 //protocol Product {}
 //
@@ -157,7 +179,19 @@ protocol ProductionLine {
 
 protocol Factory {
   associatedtype ProductType
+  associatedtype LineType: ProductionLine
+  var productionLines: [LineType] { get }
   func produce() -> [ProductType]
+}
+
+extension Factory where ProductType == LineType.ProductType {
+  func produce() -> [ProductType] {
+    var newItems: [ProductType] = []
+    productionLines.forEach { newItems.append($0.produce()) }
+    print("Finished Production")
+    print("-------------------")
+    return newItems
+  }
 }
 
 struct GenericProductionLine<P: Product>: ProductionLine {
@@ -168,14 +202,7 @@ struct GenericProductionLine<P: Product>: ProductionLine {
 
 struct GenericFactory<P: Product>: Factory {
   var productionLines: [GenericProductionLine<P>] = []
-
-  func produce() -> [P] {
-    var newItems: [P] = []
-    productionLines.forEach { newItems.append($0.produce()) }
-    print("Finished Production")
-    print("-------------------")
-    return newItems
-  }
+  typealias ProductType = P
 }
 
 var carFactory = GenericFactory<Car>()
@@ -198,7 +225,17 @@ let collections = [AnyCollection(array),
                    AnyCollection(set),
                    AnyCollection(array.reversed())]
 
+let anyCollections: any Collection = [array, set, reversedArray]
+
 let total = collections.flatMap { $0 }.reduce(0, +) // 165
+
+for item in collections {
+  print(type(of: item))
+}
+
+for item in anyCollections {
+  print(type(of: item))
+}
 
 protocol Pet {
   associatedtype Food
@@ -275,3 +312,27 @@ print(value1 + value2) // prints 2
 
 // Compiler error, types don't match up
 // makeEquatableNumericInt() == makeEquatableNumericDouble()
+
+var someCollection : some Collection = [1, 2, 3]
+print(type(of: someCollection)) // Array<Int>
+
+//someCollection.append(4)
+
+var intArray = [1, 2, 3]
+var intSet = Set([1, 2, 3])
+
+//var arrayOfSome: [some Collection] = [intArray, intSet] // Compiler error
+var arrayOfAny: [any Collection] = [intArray, intSet]
+
+var someArray: some Collection = intArray
+var someSet: some Collection = intSet
+//someArray = someSet // Compiler error
+//someSet = someArray // Compiler error
+
+var anyElement: any Collection = intArray
+anyElement = intSet
+anyElement
+
+var intArray2 = [1, 2, 3]
+var someArray2: some Collection = intArray2
+someArray = someArray2 // Compiler Error
