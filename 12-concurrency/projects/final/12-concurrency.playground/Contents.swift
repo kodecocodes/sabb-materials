@@ -86,7 +86,7 @@ struct Attributes: Decodable {
 }
 
 func fetchDomains() async throws -> [Domain] {
-  let url = URL(string: "https://api.raywenderlich.com/api/domains")!
+  let url = URL(string: "https://api.kodeco.com/api/domains")!
   let (data, _) = try await URLSession.shared.data(from: url)
   return try JSONDecoder().decode(Domains.self, from: data).data
 }
@@ -118,22 +118,25 @@ Task {
   }
 }
 
-func findTitlesSerial(first: URL, second: URL) async throws -> (String?, String?) {
+func findTitlesSerial(
+  first: URL,
+  second: URL
+) async throws -> (String?, String?) {
   let title1 = try await findTitle(url: first)
   let title2 = try await findTitle(url: second)
   return (title1, title2)
 }
 
-/*
-func findTitlesParallel(first: URL, second: URL) async throws -> (String?, String?) {
+
+func findTitlesParallel(
+  first: URL,
+  second: URL
+) async throws -> (String?, String?) {
   async let title1 = findTitle(url: first)
   async let title2 = findTitle(url: second)
   let titles = try await [title1, title2]
   return (titles[0], titles[1])
 }
-*/
-
-//Warning: The commented asynchronous code only works in projects.
 
 extension Domains {
   static var domains: [Domain] {
@@ -194,12 +197,12 @@ actor Playlist {
   }
 }
 
-let favorites = Playlist(title: "Favorite songs", author: "Cosmin", songs: ["Nothing else matters"])
+let favorites = Playlist(title: "Favorite songs", author: "Ehab", songs: ["Where My Heart Will Take Me"])
 let partyPlaylist = Playlist(title: "Party songs", author: "Ray", songs: ["Stairway to heaven"])
 
 Task {
   await favorites.move(song: "Stairway to heaven", from: partyPlaylist)
-  await favorites.move(song: "Nothing else matters", to: partyPlaylist)
+  await favorites.move(song: "Where My Heart Will Take Me", to: partyPlaylist)
   await print(favorites.songs)
 }
 
