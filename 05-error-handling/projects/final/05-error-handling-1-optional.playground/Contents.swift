@@ -1,4 +1,4 @@
-/// Copyright (c) 2022 Kodeco LLC
+/// Copyright (c) 2023 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+// Failable initializers
 let value = Int("3")
 let failedValue = Int("nope")
 
@@ -42,23 +43,24 @@ let snack = PetFood(rawValue: "fuuud!")
 
 struct PetHouse {
   let squareFeet: Int
-    
-  init?(squareFeet: Int) {
-    if squareFeet < 1 {
+
+  init?(squareFeetAsString: String) {
+    guard let squareFeet = Int(squareFeetAsString) else {
       return nil
     }
     self.squareFeet = squareFeet
   }
 }
 
-let tooSmall = PetHouse(squareFeet: 0)
-let house = PetHouse(squareFeet: 1)
+let nopeHouse = PetHouse(squareFeetAsString: "nope")
+let house = PetHouse(squareFeetAsString: "100")
+
 
 // Optional chaining
 /*
 class Pet {
   var breed: String?
-    
+
   init(breed: String? = nil) {
     self.breed = breed
   }
@@ -66,7 +68,7 @@ class Pet {
 
 class Person {
   let pet: Pet
-    
+
   init(pet: Pet) {
     self.pet = pet
   }
@@ -77,6 +79,7 @@ let olive = Pet()
 
 let janie = Person(pet: olive)
 // let dogBreed = janie.pet.breed! // This is bad! Will cause a crash!
+
 if let dogBreed = janie.pet.breed {
   print("Olive is a \(dogBreed).")
 } else {
@@ -151,6 +154,7 @@ if let sound = felipe.pet?.favoriteToy?.sound {
 } else {
   print("No sound.")
 }
+
 
 // Map and compactMap
 let team = [janie, tammy, felipe]

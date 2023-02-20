@@ -1,4 +1,4 @@
-/// Copyright (c) 2022 Kodeco LLC
+/// Copyright (c) 2023 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ enum PersonError: Error {
 }
 
 extension Person {
-  var data: String {
+  var description: String {
     get throws {
       guard !name.isEmpty else {throw PersonError.noName}
       guard age > 0 else {throw PersonError.noAge}
@@ -54,32 +54,32 @@ extension Person {
   }
 }
 
-let me = Person(name: "Cosmin", age: 36)
+let me = Person(name: "Alice", age: 32)
 
 me.name = ""
 do {
-  try me.data
+  try me.description
 } catch {
   print(error)
 }
 
 me.age = -36
 do {
-  try me.data
+  try me.description
 } catch {
   print(error)
 }
 
-me.name = "Cosmin"
+me.name = "Alice"
 do {
-  try me.data
+  try me.description
 } catch {
   print(error)
 }
 
 me.age = 36
 do {
-  try me.data
+  try me.description
 } catch {
   print(error)
 }

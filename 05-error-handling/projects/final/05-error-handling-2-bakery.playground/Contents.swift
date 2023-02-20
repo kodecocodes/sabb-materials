@@ -1,4 +1,4 @@
-/// Copyright (c) 2022 Kodeco LLC
+/// Copyright (c) 2023 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -54,11 +54,11 @@ class Bakery {
     "HandPie": Pastry(flavor: "Cherry", numberOnHand: 6)
   ]
   
-  func open(_ now: Bool = Bool.random()) throws -> Bool {
-    guard now else {
+  func open(_ shouldOpen: Bool = Bool.random()) throws -> Bool {
+    guard shouldOpen else {
       throw Bool.random() ? BakeryError.inventory : BakeryError.noPower
     }
-    return now
+    return shouldOpen
   }
     
   func orderPastry(item: String, amountRequested: Int, flavor: String)  throws  -> Int {

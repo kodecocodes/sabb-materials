@@ -1,4 +1,4 @@
-/// Copyright (c) 2022 Kodeco LLC
+/// Copyright (c) 2023 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@
 /*:
  ## Error Handling
  ### Challenge 1: Even strings
- Write a throwing function that converts a `String` to an even number, rounding down if necessary.
+ Write a function that converts a `String` to an even number, rounding down if necessary. It should throw if the `String` is not a valid number.
  */
 enum NumberError: Error {
   case notANumber
@@ -63,9 +63,10 @@ do {
 } catch {
   print("You can't convert the string to a number!")
 }
+
 /*:
  ### Challenge 2: Safe division
- Write a throwing function that divides two Int types.
+ Write a function that divides two `Int`s. It should throw if the divisor is zero.
  */
 enum DivisionError: Error {
   case divisionByZero
@@ -88,4 +89,69 @@ do {
   try divide(10, 0)
 } catch {
   print("You can't divide by zero!")
+}
+
+/*:
+ ### Challenge 3: Account login
+ Given the following code:
+ ```
+ class Account {
+   let token: String
+ }
+
+ enum LoginError: Error {
+   case invalidUser
+   case invalidPassword
+ }
+
+ func onlyAliceLogin(username: String, password: String) throws -> String {
+   guard username == "alice" else {
+     throw LoginError.invalidUser
+   }
+   guard password == "hunter2" else {
+     throw LoginError.invalidPassword
+   }
+   return "AUTH_TOKEN"
+ }
+ ```
+
+ Write an initializer for `Account` that takes a username, password, and a `loginMethod` closure. The `loginMethod` closure should itself take two `String` parameters and return a `String`. The `loginMethod` should be called and the result set to the `Account`'s `token` variable. The `loginMethod` closure should be able to throw.
+
+ This initializer should work when used with the following examples:
+ ```
+ let account1 = try? Account(username: "alice", password: "hunter2", loginMethod: onlyAliceLogin)
+
+ let account2 = Account(username: "alice", password: "hunter2") { _, _ in
+   return "AUTH_TOKEN"
+ }
+ ```
+ */
+
+class Account {
+  let token: String
+
+  init(username: String, password: String, loginMethod: (String, String) throws -> String) rethrows {
+    self.token = try loginMethod(username, password)
+  }
+}
+
+enum LoginError: Error {
+  case invalidUser
+  case invalidPassword
+}
+
+func onlyAliceLogin(username: String, password: String) throws -> String {
+  guard username == "alice" else {
+    throw LoginError.invalidUser
+  }
+  guard password == "hunter2" else {
+    throw LoginError.invalidPassword
+  }
+  return "AUTH_TOKEN"
+}
+
+let account1 = try? Account(username: "alice", password: "hunter2", loginMethod: onlyAliceLogin)
+
+let account2 = Account(username: "alice", password: "hunter2") { _, _ in
+  return "AUTH_TOKEN"
 }

@@ -1,4 +1,4 @@
-/// Copyright (c) 2022 Kodeco LLC
+/// Copyright (c) 2023 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -108,4 +108,12 @@ func perform(times: Int, movement: () throws -> ()) rethrows {
   for _ in 1...times {
     try movement()
   }
+}
+
+try? perform(times: 5) {
+  try pug.move(.forward)
+}
+
+perform(times: 5) {
+  pug.reset()
 }
