@@ -36,7 +36,7 @@
  
  Break the strong reference cycle in the following code:
  
- ```swift
+ ```
  class Person {
    let name: String
    let email: String
@@ -62,7 +62,7 @@
      print("Goodbye \(type)!")
    }
  }
- var owner: Person? = Person(name: "Cosmin", email: "cosmin@whatever.com")
+ var owner: Person? = Person(name: "Alice", email: "alice@wonderland.magical")
  var car: Car? = Car(id: 10, type: "BMW")
  owner?.car = car
  car?.owner = owner
@@ -99,7 +99,7 @@ class Car {
   }
 }
 
-var owner: Person? = Person(name: "Cosmin", email: "cosmin@whatever.com")
+var owner: Person? = Person(name: "Alice", email: "alice@wonderland.magical")
 var car: Car? = Car(id: 10, type: "BMW")
 
 owner?.car = car
@@ -107,12 +107,13 @@ car?.owner = owner
 
 owner = nil
 car = nil
+
 /*:
  ### Challenge 2: Break another cycle
  
  Break the strong reference cycle in the following code:
  
- ```swift
+ ```
  class Customer {
    let name: String
    let email: String
@@ -193,3 +194,59 @@ account = nil
 customer = nil
 
 
+/*:
+ ### Challenge 3: Break this retain cycle involving closures
+
+ Break the strong reference cycle in the following code:
+
+ ```
+ class Calculator {
+   var result: Int = 0
+   var command: ((Int) -> Int)? = nil
+
+   func execute(value: Int) {
+     guard let command = command else { return }
+     result = command(value)
+   }
+
+   deinit {
+     print("Goodbye MathCommand! Result was \(result).")
+   }
+ }
+
+ do {
+   var calculator = Calculator()
+   calculator.command = { (value: Int) in
+     return calculator.result + value
+   }
+
+   calculator.execute(value: 1)
+   calculator.execute(value: 2)
+ }
+ ```
+ */
+
+class Calculator {
+  var result: Int = 0
+  var command: ((Int) -> Int)? = nil
+
+  func execute(value: Int) {
+    guard let command = command else { return }
+    result = command(value)
+  }
+
+  deinit {
+    print("Goodbye MathCommand! Result was \(result).")
+  }
+}
+
+do {
+  var calculator = Calculator()
+  calculator.command = { [weak calculator] (value: Int) in
+    guard let calculator = calculator else { return 0 }
+    return calculator.result + value
+  }
+
+  calculator.execute(value: 1)
+  calculator.execute(value: 2)
+}

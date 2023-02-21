@@ -118,7 +118,7 @@ class Calculator {
 }
 
 do {
-  let author = Author(name: "Cosmin")
+  let author = Author(name: "Alice")
   let tutorial = Tutorial(title: "Memory management", author: author)
   print(tutorial.description())
   let editor = Editor(name: "Ray")
@@ -139,7 +139,7 @@ final class FunctionKeeper {
   }
 }
 
-let name = "Cosmin"
+let name = "Alice"
 let f = FunctionKeeper {
   print("Hello, \(name)")
 }
@@ -162,7 +162,7 @@ g()
 
 let tutorialDescription: () -> String
 do {
-  let author = Author(name: "Cosmin")
+  let author = Author(name: "Alice")
   let tutorial = Tutorial(title: "Memory management", author: author)
   tutorialDescription = tutorial.description
 }
