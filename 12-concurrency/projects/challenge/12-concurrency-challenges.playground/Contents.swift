@@ -33,7 +33,7 @@
 import SwiftUI
 /*:
  ## Concurrency
- ### Challenge 1: Safe teams
+ ### Challenge 1: Safe Teams
  Change the following class so it's asynchronous-safe:
  
  ```swift
@@ -100,16 +100,16 @@ actor Team {
   }
 }
 
-let madridTeam = Team(name: "Real Madrid", stadium: "Santiago Bernabeu", players: ["Lionel Messi"])
-let barcelonaTeam = Team(name: "FC Barcelona" , stadium: "Camp Nou", players: ["Cristiano Ronaldo"])
+let psgTeam = Team(name: "Paris Saint-Germain", stadium: "Parc des Princes", players: ["Lionel Messi"])
+let alnassrTeam = Team(name: "Al Nassr" , stadium: "Mrsool Park", players: ["Cristiano Ronaldo"])
 
 Task {
-  await madridTeam.buy(player: "Cristiano Ronaldo", from: barcelonaTeam)
-  await madridTeam.sell(player: "Lionel Messi", to: barcelonaTeam)
+  await psgTeam.buy(player: "Cristiano Ronaldo", from: alnassrTeam)
+  await psgTeam.sell(player: "Lionel Messi", to: alnassrTeam)
 }
 /*:
- ### Challenge 2: Custom teams
- Conform the asynchronous-safe type from the previous challenge to `CustomStringConvertible`.
+ ### Challenge 2: Custom Teams
+ Use and extension to conform the asynchronous-safe type from the previous challenge to `CustomStringConvertible`.
  */
 extension Team: CustomStringConvertible {
   nonisolated var description: String  {
@@ -117,9 +117,9 @@ extension Team: CustomStringConvertible {
   }
 }
 
-print(madridTeam)
+print(psgTeam)
 /*:
- ### Challenge 3: `Sendable` teams
+ ### Challenge 3: `Sendable` Teams
  Make the following class `Sendable`:
  
  ```swift

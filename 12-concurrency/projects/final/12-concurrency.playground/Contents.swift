@@ -30,11 +30,12 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
 Task {
   print("Doing some work on a task")
 }
+
 print("Doing some work on the main actor")
 
 Task {
@@ -113,14 +114,13 @@ func findTitle(url: URL) async throws -> String? {
 }
 
 Task {
-  if let title = try await findTitle(url: URL(string: "https://www.raywenderlich.com")!) {
+  if let title = try await findTitle(url: URL(string: "https://www.kodeco.com")!) {
     print(title)
   }
 }
 
-func findTitlesSerial(
-  first: URL,
-  second: URL
+func findTitlesSerial(first: URL,
+                      second: URL
 ) async throws -> (String?, String?) {
   let title1 = try await findTitle(url: first)
   let title2 = try await findTitle(url: second)
