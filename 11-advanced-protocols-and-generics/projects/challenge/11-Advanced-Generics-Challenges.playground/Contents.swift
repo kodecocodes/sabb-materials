@@ -92,7 +92,7 @@ func makeToyBuilder() -> some Robot {
 }
 
 /*:
- ## Challenge 3: Monster truck toy
+ ## Challenge 3: Monster Truck Toy
  Create a monster truck toy that has 120 pieces and a robot to make this toy. The robot is less sophisticated and can only assemble 200 pieces per minute. Next, change the `makeToyBuilder()` function to return this new robot.
  */
 

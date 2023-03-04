@@ -46,7 +46,7 @@
 //    var name: String
 //}
 
-//var somePet: any Pet = Dog(name: "Titan")
+//var somePet: any Pet = Dog(name: "Mattie")
 
 //protocol Pet {
 //  associatedtype Food
@@ -335,4 +335,4 @@ anyElement
 
 var intArray2 = [1, 2, 3]
 var someArray2: some Collection = intArray2
-someArray = someArray2 // Compiler Error
+//someArray = someArray2 // Compiler Error
