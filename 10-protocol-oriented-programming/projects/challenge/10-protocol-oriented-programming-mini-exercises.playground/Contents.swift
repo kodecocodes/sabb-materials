@@ -46,6 +46,7 @@ extension CustomStringConvertible {
 
 struct MyStruct: CustomStringConvertible { }
 print(MyStruct())
+
 /*:
  Write a default implementation on `CustomStringConvertible` that will print the win/loss record in the format `Wins - Losses` for any `TeamRecord` type. For instance, if a team is 10 and 5, it should return `10 - 5`.
  */
