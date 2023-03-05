@@ -32,7 +32,7 @@
 
 /*:
  ## Memory Management
- ### Challenge 1: Break the cycle
+ ### Challenge 1: Break the Cycle
  
  Break the strong reference cycle in the following code:
  
@@ -109,7 +109,7 @@ owner = nil
 car = nil
 
 /*:
- ### Challenge 2: Break another cycle
+ ### Challenge 2: Break Another Cycle
  
  Break the strong reference cycle in the following code:
  
@@ -195,7 +195,7 @@ customer = nil
 
 
 /*:
- ### Challenge 3: Break this retain cycle involving closures
+ ### Challenge 3: Break This Retain Cycle Involving Closures
 
  Break the strong reference cycle in the following code:
 

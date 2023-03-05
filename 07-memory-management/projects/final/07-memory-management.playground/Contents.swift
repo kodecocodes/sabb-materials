@@ -119,7 +119,7 @@ class Calculator {
 
 do {
   let author = Author(name: "Alice")
-  let tutorial = Tutorial(title: "Memory management", author: author)
+  let tutorial = Tutorial(title: "Memory Management", author: author)
   print(tutorial.description())
   let editor = Editor(name: "Ray")
   author.tutorials.append(tutorial)
@@ -163,7 +163,7 @@ g()
 let tutorialDescription: () -> String
 do {
   let author = Author(name: "Alice")
-  let tutorial = Tutorial(title: "Memory management", author: author)
+  let tutorial = Tutorial(title: "Memory Management", author: author)
   tutorialDescription = tutorial.description
 }
 print(tutorialDescription())
