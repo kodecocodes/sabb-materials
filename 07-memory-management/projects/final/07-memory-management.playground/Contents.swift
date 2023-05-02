@@ -58,7 +58,7 @@ class Tutorial {
   
   lazy var description: () -> String = {
     [weak self] in
-    guard let self = self else {
+    guard let self else {
       return "The tutorial is no longer available."
     }
     return "\(self.title) by \(self.author.name)"
