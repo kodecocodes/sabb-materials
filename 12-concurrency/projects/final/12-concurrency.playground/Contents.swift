@@ -58,13 +58,13 @@ task.cancel()
 
 Task {
   print("Hello")
-  try await Task.sleep(nanoseconds: 1_000_000_000)
+    try await Task.sleep(for: .seconds(1))
   print("Goodbye")
 }
 
 func helloPauseGoodbye() async throws {
   print("Hello")
-  try await Task.sleep(nanoseconds: 1_000_000_000)
+    try await Task.sleep(for: .seconds(1))
   print("Goodbye")
 }
 
