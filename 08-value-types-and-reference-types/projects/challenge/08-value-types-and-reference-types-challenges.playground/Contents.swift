@@ -36,8 +36,8 @@ import Foundation
  ## Value Types and Reference Types Challenges
  ### Challenge 1: Image with Value Semantics
  
- Build a new type, `Image`, that represents a simple image. It should also provide mutating functions that apply modifications to the image. Use copy-on-write to economize the use of memory when a user defines a large array of these identical images and doesn’t mutate any of them.
-
+ Build a new type, `Image`, representing a simple image. It should also provide mutating functions that apply modifications to the image. Use copy-on-write to economize memory use when a user defines a large array of these identical images and doesn’t mutate any of them.
+ 
  To get started, assume you’re using the following Pixels class for the raw storage:
  
  ```swift
@@ -184,14 +184,14 @@ image2[0,0] // -> 100 thanks again, copy-on-write
 /*: 
  ### Challenge 2: Enhancing `UIImage`
  
- Pretend you’re Apple and want to modify `UIImage` to replace it with a value type with the mutating functions described above. Could you do make it backward compatible with code that uses the existing `UIImage` API?
+ Pretend you’re Apple and want to modify `UIImage` to replace it with a value type with the mutating functions described above. Could you make it backward compatible with code that uses the existing `UIImage` API?
  */
 // Yes. Because UIImage is already immutable, it already has value semantics.  Using a copy-on-write implementation you could introduce mutating methods while preserving value semantics. Since adding mutability to its API would only be adding new behaviors, rather than modifying existing ones, this would be backward-compatible with existing use sites.
 
 /*:
  ### Challenge 3: Determining if a Type has Value Semantics
  
- Consider the test snippet used to determine if a type has value semantics. What would you need to do in order to define an automatic means to test if a type supports value semantics? If someone hands you a type, can you know for sure if it offers value semantics? What if you cannot see its implementation? Could the compiler be expected to know?
+ Consider the test snippet used to determine if a type has value semantics. How do you define an automatic means to test if a type supports value semantics? If I handed you a type, can you tell me if it offers value semantics? What if you could not see its implementation? Could the compiler be expected to know?
  */
 /* The test snippet defines an _operational_ test of value semantics. The recipe for value semantic constitutes a more limited _deductive_ test. What is the potential for automating either of these?
  

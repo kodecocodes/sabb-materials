@@ -113,7 +113,7 @@ do {
   let artPlan = PaintingPlan()
   let housePlan = artPlan
   artPlan.bucket.color // => blue
-  // for house-painting only we fill the bucket with green paint
+  // for house painting only, we fill the bucket with green paint
   housePlan.bucket.color = Color.green
   artPlan.bucket.color // => green. oops!
 
