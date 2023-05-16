@@ -34,11 +34,14 @@ import Foundation
  ## Property Wrapper Challenges
  ### Challenge 1: Generic Property Wrapper for CopyOnWrite
 
- Consider the property wrapper `CopyOnWriteColor` you defined in the previous chapter. It lets you wrap any variable of type `Color`, and it manages the sharing of an underlying storage type, `Bucket`, which owns a single `Color` instance. Thanks to structural sharing, multiple `CopyOnWriteColor` instances might share the same `Bucket` instance, thus sharing its `Color` instance, thus saving memory.
+ Consider the property wrapper `CopyOnWriteColor` you defined earlier in this chapter. It lets you wrap any variable of type `Color`. It manages the sharing of an underlying storage type, `Bucket`, which owns a single `Color` instance. Thanks to structural sharing, multiple `CopyOnWriteColor` instances might share the same `Bucket` instance — thus sharing its `Color` instance and saving memory.
+
 
   That property wrapper was only suitable for `Color` properties stored in a `Bucket` type. But the idea is more general and depends on two key facts. First, that the wrapped value type, `Color`, already has value semantics — this fact is what ensured that assigning `Color` values into `Bucket`s did not produce unintended sharing at the level of `Color` type itself. Second, that `Bucket` itself has reference semantics — this fact is what allows us to use it as the instance which may be structurally shared across instances of whatever type contains the wrapped property, e.g., `PaintingPlan`s. To implement the copy-on-write logic, what matters about `Bucket` is not its domain semantics (like `isRefilled`) but just that it is a reference type. You only used it as a _box_ for the `Color` value.
 
-  Since property wrappers can be generic, you can define a _generic_ copy-on-write property wrapper type, `CopyOnWrite`. Instead of being able to wrap only `Color` values, it should be generic over any value semantic that it wraps. Instead of using a dedicated storage type like `Bucket`, it should provide its own box type to act as storage. Your challenge: write the definition for this generic type, `CopyOnWrite`, and use it in an example to verify that the wrapped properties preserve the value semantics of the original type. To get you started, here is a suitable definition of a box type:
+ Since property wrappers can be generic, try defining a **generic** copy-on-write property wrapper type, `CopyOnWrite`. Instead of being able to wrap only `Color` values, it should be generic over any value semantic that it wraps. Instead of using a dedicated storage type like `Bucket`, it should provide its own box type for storage.
+
+ Your challenge: Write the definition for this generic type, `CopyOnWrite`, and use it in an example to verify that the wrapped properties preserve the value semantics of the original type. To get you started, here is a suitable definition of a box type:
  */
 private class StorageBox<StoredValue> {
   
@@ -49,7 +52,8 @@ private class StorageBox<StoredValue> {
   }
 }
 
-//: challenge answer:
+//: ### Challenge Answer
+
 @propertyWrapper
 struct CopyOnWrite<T> {
   
@@ -101,7 +105,7 @@ In practice, the main value of an explicit implementation, like the one above, i
 
  ### Challenge 2: Implement @ValueSemantic
 
- Using `StorageBox` from the previous example and the following protocol, `DeepCopyable`, as a constraint, write the definition for a generic property wrapper `@ValueSemantic`. Then use it in an example to verify that wrapped properties have value semantics even when wrapping an underlying type that doesn't. Example: `NSMutableString` is an example of a non-value semantic type.  Make it conform to `DeepCopyable` and test it with `@ValueSemantic`.
+ Using `StorageBox` from the last challenge and the following protocol, `DeepCopyable`, as a constraint, write the definition for a generic property wrapper `@ValueSemantic`. Then use it in an example to verify that wrapped properties have value semantics even when wrapping an underlying type that doesn't. Example: `NSMutableString` is an example of a non-value semantic type. Make it conform to `DeepCopyable` and test it with `@ValueSemantic`.
 
  Hints:
 
@@ -122,7 +126,7 @@ protocol DeepCopyable {
   func deepCopy() -> Self
 }
 
-//: challenge answer:
+//: ### Challenge Answer
 @propertyWrapper
 struct ValueSemantic<T: DeepCopyable> {
   
