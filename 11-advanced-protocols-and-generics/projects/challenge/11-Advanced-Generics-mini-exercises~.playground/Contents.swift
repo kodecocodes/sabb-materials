@@ -41,7 +41,7 @@ protocol ProductionLine {
 }
 
 protocol Factory {
-  associatedtype ProductType: Product
+  associatedtype ProductType
   associatedtype LineType: ProductionLine
   var warehouse: [ProductType] { get set }
   var productionLines: [LineType] { get set }
@@ -59,20 +59,20 @@ extension Factory where ProductType == LineType.ProductType {
   }
 
   mutating func addProductionLine() {
-    let newProductionLine = LineType()
+    let newProductionLine = LineType.init()
     productionLines.append(newProductionLine)
   }
 }
 
 struct Car: Product {
   init() {
-    print("Car 🚘")
+    print("Producing one awesome Car 🚔")
   }
 }
 
 struct Chocolate: Product{
   init() {
-    print("Chocolate bar 🍫")
+    print("Producing one Chocolate bar 🍫")
   }
 }
 

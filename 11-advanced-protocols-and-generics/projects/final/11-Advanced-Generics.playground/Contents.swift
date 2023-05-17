@@ -36,22 +36,22 @@
 //struct Cat: Pet {
 //  var name: String
 //}
-//
-//var somePet: Pet = Cat(name: "Whiskers")
 
-//struct Broccoli { }
-//
-//struct Dog: Pet {
-//    typealias Food = Broccoli
-//    var name: String
-//}
+//var pet: any Pet = Cat(name: "Whiskers")
 
-//var somePet: any Pet = Dog(name: "Mattie")
+protocol Pet {
+  associatedtype Food
+  var name: String { get }
+}
 
-//protocol Pet {
-//  associatedtype Food
-//  var name: String { get }
-//}
+struct DogFood { }
+
+struct Dog: Pet {
+    typealias Food = DogFood
+    var name: String
+}
+
+var pet: any Pet = Dog(name: "Mattie")
 
 //protocol WeightCalculatable {
 //  associatedtype WeightType
@@ -60,7 +60,6 @@
 
 class Truck: WeightCalculatable {
   // This heavy thing only needs integer accuracy
-  typealias WeightType = Int
 
   var weight: Int {
     100
@@ -69,7 +68,6 @@ class Truck: WeightCalculatable {
 
 class Flower: WeightCalculatable {
   // This light thing needs decimal places
-  typealias WeightType = Double
 
   var weight: Double {
     0.0025
@@ -84,11 +82,11 @@ class Flower: WeightCalculatable {
 //  }
 //}
 
-//class CatWeightThing: WeightCalculatable {
-//  typealias WeightType = Cat
+//class DogWeightThing: WeightCalculatable {
+//  typealias WeightType = Dog
 //
-//  var weight: Cat {
-//    Cat(name: "What is this cat doing here?")
+//  var weight: Dog {
+//    Dog(name: "Rufus") // What is a dog doing here?
 //  }
 //}
 
@@ -113,16 +111,16 @@ var lightFlower1 = Flower()
 //protocol Product {}
 //
 //protocol ProductionLine  {
-//  func produce() -> Product
+//  func produce() -> any Product
 //}
 //
 //protocol Factory {
-//  var productionLines: [ProductionLine] {get}
+//  var productionLines: [any ProductionLine] {get}
 //}
 //
 //extension Factory {
-//  func produce() -> [Product] {
-//    var items: [Product] = []
+//  func produce() -> [any Product] {
+//    var items: [any Product] = []
 //    productionLines.forEach { items.append($0.produce()) }
 //    print("Finished Production")
 //    print("-------------------")
@@ -131,21 +129,20 @@ var lightFlower1 = Flower()
 //}
 //
 
-
 struct Car: Product {
   init() {
-    print("Producing one awesome Car 🚔")
+    print("Car 🚘")
   }
 }
 //
 //struct CarProductionLine: ProductionLine {
-//  func produce() -> Product {
+//  func produce() -> any Product {
 //    Car()
 //  }
 //}
 //
 //struct CarFactory: Factory {
-//  var productionLines: [ProductionLine] = []
+//  var productionLines: [any ProductionLine] = []
 //}
 //
 //var carFactory = CarFactory()
@@ -154,7 +151,7 @@ struct Car: Product {
 //
 //struct Chocolate: Product {
 //  init() {
-//    print("Producing one chocolate bar 🍫")
+//    print("Chocolate bar 🍫")
 //  }
 //}
 //
@@ -172,13 +169,13 @@ protocol Product {
   init()
 }
 
-protocol ProductionLine {
-  associatedtype ProductType
+protocol ProductionLine<ProductType> {
+  associatedtype ProductType: Product
   func produce() -> ProductType
 }
 
 protocol Factory {
-  associatedtype ProductType
+  associatedtype ProductType: Product
   associatedtype LineType: ProductionLine
   var productionLines: [LineType] { get }
   func produce() -> [ProductType]
@@ -211,6 +208,25 @@ carFactory.produce()
 
 // MARK: -
 
+func sum<C: Collection>(_ input: C) -> C.Element where C.Element: Numeric {
+  input.reduce(0, +)
+}
+
+sum([1, 2, 3]) // Returns Int: 6
+sum([1.25, 2.25, 3.25]) // Returns Double: 6.75
+
+
+// MARK: -
+
+
+func produceCars(line: any ProductionLine<Car>, count: Int) -> [Car] {
+  (1...count).map { _ in line.produce() }
+}
+
+produceCars(line: GenericProductionLine<Car>(), count: 5)
+
+// MARK: -
+
 let array = Array(1...10)
 let set = Set(1...10)
 let reversedArray = array.reversed()
@@ -221,65 +237,26 @@ for e in reversedArray {
 
 let arrayCollections = [array, Array(set), Array(reversedArray)]
 
-let collections = [AnyCollection(array),
-                   AnyCollection(set),
-                   AnyCollection(array.reversed())]
-
-let anyCollections: any Collection = [array, set, reversedArray]
-
-let total = collections.flatMap { $0 }.reduce(0, +) // 165
-
-for item in collections {
-  print(type(of: item))
+do {
+  let collections = [AnyCollection(array),
+                     AnyCollection(set),
+                     AnyCollection(array.reversed())]
+  let total = collections.reduce(0) { $0 + $1.reduce(0, +) } // 165
 }
 
-for item in anyCollections {
-  print(type(of: item))
+do {
+  let collections: [any Collection<Int>] = [array, set, reversedArray]
+  let total = collections.reduce(0) { $0 + $1.reduce(0, +) } // 165
 }
 
-protocol Pet {
-  associatedtype Food
-  func eat(_ food: Food)
+do {
+  let collections = [AnyCollection(array),
+                     AnyCollection(set),
+                     AnyCollection(array.reversed())]
+  let total = collections.flatMap { $0 }.reduce(0, +) // 165
 }
 
-enum PetFood { case dry, wet }
-
-struct Cat: Pet {
-  func eat(_ food: PetFood) {
-    print("Eating cat food.")
-  }
-}
-
-struct Dog: Pet {
-  func eat(_ food: PetFood) {
-    print("Eating dog food.")
-  }
-}
-
-//let pets: [Pet] = [Dog(), Cat()] // ERROR: Pet can only be used as a generic constraint
-
-struct AnyPet<Food>: Pet {
-  private let _eat: (Food) -> Void
-
-  init<SomePet: Pet>(_ pet: SomePet) where SomePet.Food == Food {
-    _eat = pet.eat(_:)
-  }
-
-  func eat(_ food: Food) {
-    _eat(food)
-  }
-}
-
-let pets = [AnyPet(Dog()), AnyPet(Cat())]
-
-extension Pet {
-  func eraseToAnyPet() -> AnyPet<Food> {
-    .init(self)
-  }
-}
-
-let morePets = [Dog().eraseToAnyPet(),
-            Cat().eraseToAnyPet()]
+// MARK: -
 
 func makeValue() -> some FixedWidthInteger {
   42
@@ -297,8 +274,8 @@ func makeValueRandomly() -> some FixedWidthInteger {
   }
 }
 
-// let v: FixedWidthInteger = 42 // compiler error
-let v = makeValue() // works
+let v: any FixedWidthInteger = 42 // compiler error
+//let v = makeValue() // works
 
 func makeEquatableNumericInt() -> some Numeric & Equatable { 1 }
 func makeEquatableNumericDouble() -> some Numeric & Equatable { 1.0 }
@@ -316,7 +293,7 @@ print(value1 + value2) // prints 2
 var someCollection : some Collection = [1, 2, 3]
 print(type(of: someCollection)) // Array<Int>
 
-//someCollection.append(4)
+// someCollection.append(4)
 
 var intArray = [1, 2, 3]
 var intSet = Set([1, 2, 3])
@@ -324,15 +301,33 @@ var intSet = Set([1, 2, 3])
 //var arrayOfSome: [some Collection] = [intArray, intSet] // Compiler error
 var arrayOfAny: [any Collection] = [intArray, intSet]
 
-var someArray: some Collection = intArray
-var someSet: some Collection = intSet
+var someArray: some Collection<Int> = intArray
+var someSet: some Collection<Int> = intSet
 //someArray = someSet // Compiler error
 //someSet = someArray // Compiler error
 
-var anyElement: any Collection = intArray
+var anyElement: any Collection<Int> = intArray
 anyElement = intSet
 anyElement
 
 var intArray2 = [1, 2, 3]
-var someArray2: some Collection = intArray2
+var someArray2: some Collection<Int> = intArray2
 //someArray = someArray2 // Compiler Error
+
+
+// MARK: -
+
+do {
+  func product<C: Collection>(_ input: C) -> Double where C.Element == Double {
+    input.reduce(1, *)
+  }
+  product([1,2,3,4])
+}
+
+do {
+  func product(_ input: some Collection<Double>) -> Double {
+    input.reduce(1, *)
+  }
+  product([1,2,3,4])
+}
+
