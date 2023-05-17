@@ -124,8 +124,8 @@ struct MonsterTruckRobot: Robot {
  */
 
 class Shop {
-  var displayList: [VehicleToy] = []
-  var warehouseList: [VehicleToy] = []
+  var displayList: [any VehicleToy] = []
+  var warehouseList: [any VehicleToy] = []
   let displaySize = 100
 
   private func fillDisplay() {
