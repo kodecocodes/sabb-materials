@@ -81,7 +81,7 @@ do {
   print("PugBot failed to get home.")
 }
 
-func moveSafely(_ movement: () throws -> ()) -> String {
+func moveSafely(_ movement: () throws(PugBotError) -> ()) -> String {
   do {
     try movement()
     return "Completed operation successfully."
@@ -90,6 +90,7 @@ func moveSafely(_ movement: () throws -> ()) -> String {
   } catch PugBotError.endOfPath {
     return "The PugBot tried to move past the end of the path."
   } catch {
+    // Shouldn't be needed, but without this case the Swift compiler complains that the catch isn't exhaustive.
     return "An unknown error occurred."
   }
 }
@@ -98,20 +99,20 @@ pug.reset()
 moveSafely(goHome)
 
 pug.reset()
-moveSafely {
+moveSafely { () throws(PugBotError) in
   try pug.move(.forward)
   try pug.move(.left)
   try pug.move(.forward)
   try pug.move(.right)
 }
 
-func perform(times: Int, movement: () throws -> ()) rethrows {
+func perform(times: Int, movement: () throws(PugBotError) -> ()) rethrows {
   for _ in 1...times {
     try movement()
   }
 }
 
-try? perform(times: 5) {
+try? perform(times: 5) { () throws(PugBotError) in
   try pug.move(.forward)
 }
 
