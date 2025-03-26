@@ -128,8 +128,8 @@ private class Pixels {
 }
 
 struct Image {
-  private (set) var width: Int
-  private (set) var height: Int
+  private(set) var width: Int
+  private(set) var height: Int
   private var pixels: Pixels
   private var mutatingPixels: Pixels {
     mutating get {
