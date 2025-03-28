@@ -95,10 +95,10 @@ struct Color: CustomStringConvertible {
 
 // Preset colors
 extension Color {
-  static var black = Color(red: 0, green: 0, blue: 0)
-  static var white = Color(red: 1, green: 1, blue: 1)
-  static var blue  = Color(red: 0, green: 0, blue: 1)
-  static var green = Color(red: 0, green: 1, blue: 0)
+  static let black = Color(red: 0, green: 0, blue: 0)
+  static let white = Color(red: 1, green: 1, blue: 1)
+  static let blue  = Color(red: 0, green: 0, blue: 1)
+  static let green = Color(red: 0, green: 1, blue: 0)
   // more ...
 }
 
