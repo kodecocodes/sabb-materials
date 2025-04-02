@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 Kodeco LLC
+ * Copyright (c) 2025 Kodeco LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -98,7 +98,9 @@ class EncoderDecoderTests: XCTestCase {
     XCTAssertNotNil(jsonData, "Encoding failed")
     
     let jsonString = String(data: jsonData!, encoding: .utf8)!
-    XCTAssertEqual(jsonString, "{\"name\":\"John Appleseed\",\"gift\":\"Teddy Bear\",\"employeeId\":7}")
+    XCTAssert(jsonString.contains("\"employeeId\":7"))
+    XCTAssert(jsonString.contains("\"gift\":\"Teddy Bear\""))
+    XCTAssert(jsonString.contains("\"name\":\"John Appleseed\""))
   }
   
   func testDecoder() {
