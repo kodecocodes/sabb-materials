@@ -1,4 +1,4 @@
-/// Copyright (c) 2023 Kodeco LLC
+/// Copyright (c) 2025 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ class PugBot {
     self.name = name
   }
     
-  func move(_ direction: Direction) throws {
+  func move(_ direction: Direction) throws(PugBotError) {
     guard currentStepInPath < correctPath.count else {
       throw PugBotError.endOfPath
     }
@@ -67,7 +67,8 @@ class PugBot {
 
 let pug = PugBot(name: "Pug", correctPath: [.forward, .left, .forward, .right])
 
-func goHome() throws {
+@MainActor
+func goHome() throws(PugBotError) {
   try pug.move(.forward)
   try pug.move(.left)
   try pug.move(.forward)
@@ -80,7 +81,7 @@ do {
   print("PugBot failed to get home.")
 }
 
-func moveSafely(_ movement: () throws -> ()) -> String {
+func moveSafely(_ movement: () throws(PugBotError) -> ()) -> String {
   do {
     try movement()
     return "Completed operation successfully."
@@ -89,6 +90,7 @@ func moveSafely(_ movement: () throws -> ()) -> String {
   } catch PugBotError.endOfPath {
     return "The PugBot tried to move past the end of the path."
   } catch {
+    // Shouldn't be needed, but without this case the Swift compiler complains that the catch isn't exhaustive.
     return "An unknown error occurred."
   }
 }
@@ -97,20 +99,20 @@ pug.reset()
 moveSafely(goHome)
 
 pug.reset()
-moveSafely {
+moveSafely { () throws(PugBotError) in
   try pug.move(.forward)
   try pug.move(.left)
   try pug.move(.forward)
   try pug.move(.right)
 }
 
-func perform(times: Int, movement: () throws -> ()) rethrows {
+func perform(times: Int, movement: () throws(PugBotError) -> ()) rethrows {
   for _ in 1...times {
     try movement()
   }
 }
 
-try? perform(times: 5) {
+try? perform(times: 5) { () throws(PugBotError) in
   try pug.move(.forward)
 }
 

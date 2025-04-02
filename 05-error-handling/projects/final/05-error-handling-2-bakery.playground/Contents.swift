@@ -1,4 +1,4 @@
-/// Copyright (c) 2023 Kodeco LLC
+/// Copyright (c) 2025 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -54,14 +54,14 @@ class Bakery {
     "HandPie": Pastry(flavor: "Cherry", numberOnHand: 6)
   ]
   
-  func open(_ shouldOpen: Bool = Bool.random()) throws -> Bool {
+  func open(_ shouldOpen: Bool = Bool.random()) throws(BakeryError) -> Bool {
     guard shouldOpen else {
       throw Bool.random() ? BakeryError.inventory : BakeryError.noPower
     }
     return shouldOpen
   }
     
-  func orderPastry(item: String, amountRequested: Int, flavor: String)  throws  -> Int {
+  func orderPastry(item: String, amountRequested: Int, flavor: String) throws(BakeryError) -> Int {
     guard let pastry = itemsForSale[item] else {
       throw BakeryError.doNotSell
     }
@@ -95,6 +95,8 @@ do {
   print("Sorry, but we don't carry this flavor.")
 } catch BakeryError.tooFew {
   print("Sorry, we don't have enough items to fulfill your order.")
+//} catch {
+//  print("Some other error.")
 }
 
 let open = try? bakery.open(false)
