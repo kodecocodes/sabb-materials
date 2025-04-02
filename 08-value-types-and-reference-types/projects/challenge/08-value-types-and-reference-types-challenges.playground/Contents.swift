@@ -1,4 +1,4 @@
-/// Copyright (c) 2023 Kodeco LLC
+/// Copyright (c) 2025 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -128,8 +128,8 @@ private class Pixels {
 }
 
 struct Image {
-  private (set) var width: Int
-  private (set) var height: Int
+  private(set) var width: Int
+  private(set) var height: Int
   private var pixels: Pixels
   private var mutatingPixels: Pixels {
     mutating get {
