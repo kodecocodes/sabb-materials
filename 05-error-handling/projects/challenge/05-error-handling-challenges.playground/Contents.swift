@@ -1,4 +1,4 @@
-/// Copyright (c) 2023 Kodeco LLC
+/// Copyright (c) 2025 Kodeco LLC
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ enum NumberError: Error {
   case notANumber
 }
 
-func toEvenNumber(_ string: String) throws -> Int {
+func toEvenNumber(_ string: String) throws(NumberError) -> Int {
   guard let number = Int(string) else {
     throw NumberError.notANumber
   }
@@ -72,7 +72,7 @@ enum DivisionError: Error {
   case divisionByZero
 }
 
-func divide(_ x: Int, _ y: Int) throws -> Int {
+func divide(_ x: Int, _ y: Int) throws(DivisionError) -> Int {
   guard y != 0 else {
     throw DivisionError.divisionByZero
   }
@@ -127,20 +127,20 @@ do {
  ```
  */
 
-class Account {
-  let token: String
-
-  init(username: String, password: String, loginMethod: (String, String) throws -> String) rethrows {
-    self.token = try loginMethod(username, password)
-  }
-}
-
 enum LoginError: Error {
   case invalidUser
   case invalidPassword
 }
 
-func onlyAliceLogin(username: String, password: String) throws -> String {
+class Account {
+  let token: String
+
+  init(username: String, password: String, loginMethod: (String, String) throws(LoginError) -> String) rethrows {
+    self.token = try loginMethod(username, password)
+  }
+}
+
+func onlyAliceLogin(username: String, password: String) throws(LoginError) -> String {
   guard username == "alice" else {
     throw LoginError.invalidUser
   }
